@@ -1,18 +1,23 @@
 package com.rburgos.mastermindtestlayout;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Random;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Random;
 
 @SuppressWarnings("serial")
 public class MainLayout extends JFrame 
 {
-    private JPanel mainPanel, topPanel, pegsLeftPanel, rightPanel, bottomPanel, 
+    private static final int NUM_ROWS = 13;
+	private static final int NUM_COLS = 5;
+
+	private JPanel mainPanel, topPanel, pegsLeftPanel, rightPanel, bottomPanel,
             titlePanel, hintsPanel;
     private JLabel label, hintsTitleLabel;
     private JMenuBar menuBar;
@@ -51,7 +56,7 @@ public class MainLayout extends JFrame
         // Main frame
         setResizable(false);
         setTitle("MasterMind");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setBounds(100, 100, 480, 700);
         
         // Create the menu...
@@ -395,25 +400,19 @@ public class MainLayout extends JFrame
     {
         ArrayList<String> uniqueColors = new ArrayList<>();
         answerPegsArray.clear();
-        int rand = 0;
+        int rand;
         Random r = new Random();
-        ColorPeg tmpPeg;
-        
-        for (int i = 0; uniqueColors.size() < 5; i++)
-        {
-            rand = r.nextInt(10);            
-            
-            if (!uniqueColors.contains(colors[rand]))
-            {
-                uniqueColors.add(colors[rand]);
-            }
-        }
-        
-        for (int i = 0; i < 5; i++)
-        {
-            tmpPeg = new ColorPeg(Color.decode(uniqueColors.get(i)));
-            answerPegsArray.add(tmpPeg);
-        }
+
+	    while (answerPegsArray.size() < 5)
+	    {
+		    rand = r.nextInt(10);
+
+		    if (!uniqueColors.contains(colors[rand]))
+		    {
+			    uniqueColors.add(colors[rand]);
+			    answerPegsArray.add(new ColorPeg(Color.decode(colors[rand])));
+		    }
+	    }
     }
     
     /**
@@ -428,30 +427,25 @@ public class MainLayout extends JFrame
         
         pegsLeftPanel.removeAll();
         
-        for (int i = 0; i < 13; i++)
+        for (int i = 0; i < NUM_ROWS; i++)
         {
             initPegsArray.add(new ArrayList<>());
             dummyPegsConstraints.gridy = i;
             
-            for (int j = 0; j < 5; j++)
+            for (int j = 0; j < NUM_COLS; j++)
             {
                 dummyPegsConstraints.gridx = j;
                 
                 if (i == 0)
                 {
-                    tempColorPeg = new ColorPeg(Color.DARK_GRAY);
-                    initPegsArray.get(i).add(j, tempColorPeg);
-                    pegsLeftPanel.add((JComponent) initPegsArray.get(i).get(j), 
-                            dummyPegsConstraints);
-                    
+                    initPegsArray.get(i).add(j, new ColorPeg(Color.DARK_GRAY));
                 }
                 else
                 {
-                    tempDummyPeg = new DummyPeg();
-                    initPegsArray.get(i).add(j, tempDummyPeg);
-                    pegsLeftPanel.add((JComponent) initPegsArray.get(i).get(j), 
-                            dummyPegsConstraints); 
+                    initPegsArray.get(i).add(j, new DummyPeg());
                 }
+	            pegsLeftPanel.add((JComponent) initPegsArray.get(i).get(j),
+			            dummyPegsConstraints);
             }
             pegsLeftPanel.revalidate();
         }        
@@ -466,10 +460,10 @@ public class MainLayout extends JFrame
     public void updatePegs()
     {
         pegsLeftPanel.removeAll();
-        for (int i = 0; i < 13; i++)
+        for (int i = 0; i < NUM_ROWS; i++)
         {
             dummyPegsConstraints.gridy = i;
-            for (int j = 0; j < 5; j++)
+            for (int j = 0; j < NUM_COLS; j++)
             {
                 dummyPegsConstraints.gridx = j;
                 pegsLeftPanel.add((JComponent) initPegsArray.get(i).get(j), 
@@ -486,25 +480,20 @@ public class MainLayout extends JFrame
     public void showAnswer()
     {
         pegsLeftPanel.removeAll();
-        for (int i = 0; i < 13; i++)
+        for (int i = 0; i < NUM_ROWS; i++)
         {
             dummyPegsConstraints.gridy = i;
-            for (int j = 0; j < 5; j++)
+            for (int j = 0; j < NUM_COLS; j++)
             {
                 dummyPegsConstraints.gridx = j;
                 if (i == 0)
                 {
                     initPegsArray.get(i).add(j, 
                             (JComponent) answerPegsArray.get(j));
-                    pegsLeftPanel.add((JComponent) initPegsArray.get(i).get(j), 
-                            dummyPegsConstraints);
                 }
-                else
-                {
-                    pegsLeftPanel.add((JComponent) initPegsArray.get(i).get(j), 
-                            dummyPegsConstraints);
-                    pegsLeftPanel.revalidate();
-                }
+	            pegsLeftPanel.add((JComponent) initPegsArray.get(i).get(j),
+			            dummyPegsConstraints);
+	            pegsLeftPanel.revalidate();
             }
         }
     }

@@ -1,11 +1,8 @@
 package com.rburgos.mastermindtestlayout;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
+import javax.swing.*;
+import java.awt.*;
 import java.beans.Transient;
-
-import javax.swing.JComponent;
 
 
 @SuppressWarnings("serial")
@@ -39,8 +36,6 @@ public class ColorPeg extends JComponent
     @Override
     public void setPreferredSize(Dimension preferredSize)
     {
-        // TODO Auto-generated method stub
-        // super.setPreferredSize(preferredSize);
         prefSize.setSize(preferredSize);
     }
 
@@ -48,8 +43,6 @@ public class ColorPeg extends JComponent
     @Transient
     public Dimension getMaximumSize()
     {
-        // TODO Auto-generated method stub
-        // return super.getMaximumSize();
         return (new Dimension(200, 200));
     }
 
@@ -57,8 +50,6 @@ public class ColorPeg extends JComponent
     @Transient
     public Dimension getMinimumSize()
     {
-        // TODO Auto-generated method stub
-        // return super.getMinimumSize();
         return (new Dimension(50, 50));
     }
     
